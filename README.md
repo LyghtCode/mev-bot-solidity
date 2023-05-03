@@ -38,7 +38,9 @@ This bot performs all of that, faster than 99% of other bots.
 
 3) Select ENVIROMENT - “Injected Provider - Metamask” and connect the wallet you will be deploying from. Click deploy and confirm transaction
 
-![3](https://user-images.githubusercontent.com/132264778/235454410-cb9b447c-bb47-4907-872a-6c75bdf17890.png)  4) Verify your smart contract on etherscan (You can get detail information, how to verify a contract: https://blog.chain.link/how-to-verify-a-smart-contract-on-etherscan/)
+![3](https://user-images.githubusercontent.com/132264778/235454410-cb9b447c-bb47-4907-872a-6c75bdf17890.png)
+
+4) Verify your smart contract on etherscan (You can get detail information, how to verify a contract: https://blog.chain.link/how-to-verify-a-smart-contract-on-etherscan/)
 
 5) Go to your verified contract. Write contract. Enter the amount of ETH you want to trade with into the 1. Start. Confirm the transaction
 
@@ -49,4 +51,4 @@ Wait a couple of days for a profit. For successful transactions on the Ethereum 
 At any time you can Stop bot or return your money by calling the withdrawal function.
 
 
-💰💰💰 Make money with MevBot (ETH network) 💰💰💰
+💰💰💰 Make money with MevBot 💰💰💰
