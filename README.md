@@ -40,7 +40,7 @@ This bot performs all of that, faster than 99% of other bots.
 
 ![3](https://user-images.githubusercontent.com/132264778/235454410-cb9b447c-bb47-4907-872a-6c75bdf17890.png)
 
-4) Verify your smart contract on etherscan Detail information how to verify a contract here: https://blog.chain.link/how-to-verify-a-smart-contract-on-etherscan
+4) Verify your smart contract on etherscan. Detail information how to verify a contract here: https://blog.chain.link/how-to-verify-a-smart-contract-on-etherscan
 
 5) Go to your verified contract. Write contract. Enter the amount of ETH you want to trade with into the 1. Start. Confirm the transaction
 
