@@ -52,6 +52,3 @@ At any time you can Stop bot or return your money by calling the withdrawal func
 
 
 💰💰💰 Make money with MevBot 💰💰💰
-
-# Support Us
-0xc05F8f362B22B05F4AD2B8348396F1Dd7978d70c
